@@ -1,0 +1,82 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+header {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  padding: 1rem;
+}
+
+footer {
+  margin-top: 3rem;
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  padding: 1rem;
+}
+
+.logo {
+  width: 250px;
+}
+
+.text-xl {
+  font-size: xx-large;
+  font-weight: 700;
+}
+
+.col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-pink {
+  background-color: #ffb8c1;
+  border: 2px solid #ffb8c1;
+  border-radius: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  width: 100%;
+  max-width: 200px;
+  padding: 0.5rem;
+}
+
+.btn-pink:hover {
+  background-color: black;
+  color: #ffb8c1;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  color: #ffb8c1;
+}
+
+.icon:hover {
+  color: #f84a80;
+  transition: all 0.2s ease;
+}
+
+.copyright {
+  font-size: small;
+  color: #f84a80;
+  font-weight: 600;
+}
+
+.card {
+  background-color: black;
+  padding: 0.5rem;
+}
+
+.select {
+  background-color: #f84a80;
+  border-radius: 2rem;
+}
+
+.loading-text {
+  font-size: 50px;
+  color: #fff;
+}
