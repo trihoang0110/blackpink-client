@@ -1,20 +1,19 @@
-
 $(document).ready(function () {
   console.log("ready!");
   var file = document.querySelector(".drop-zone__input");
   const drop = document.querySelector(".drop-zone");
-  const bg = document.querySelector('.bg')
-  let load = 0
+  const bg = document.querySelector(".bg");
+  let load = 0;
   // let int = setInterval(blurring, 30)
   function blurring() {
-    load++
+    load++;
 
     if (load > 99) {
-      clearInterval(int)
+      clearInterval(int);
     }
-    var blurValue = 15 * (100 - load) / 100;
+    var blurValue = (15 * (100 - load)) / 100;
     bg.style.filter = `blur(${blurValue}px)`;
-  };
+  }
 
   // $("#error").hide();
   // $("#resultHolder").hide();
@@ -29,7 +28,7 @@ $(document).ready(function () {
     reader.readAsDataURL(file.files[0]);
     reader.onload = () => {
       base64 = reader.result;
-    }
+    };
   });
 
   drop.addEventListener("drop", (e) => {
@@ -39,7 +38,7 @@ $(document).ready(function () {
     reader.readAsDataURL(file.files[0]);
     reader.onload = () => {
       base64 = reader.result;
-    }
+    };
   });
 
   // select effect
@@ -48,12 +47,12 @@ $(document).ready(function () {
   const maxInterval = 500;
   let interval;
   const nextSelect = () => {
-    console.log('## found', members[i].children[0]);
-    members[i].classList.remove('select');
+    console.log("## found", members[i].children[0]);
+    members[i].classList.remove("select");
     const next = (i + 1) % 4;
-    members[next].classList.add('select');
+    members[next].classList.add("select");
     i = next;
-  }
+  };
   let timeOut;
   const playAnimation = function () {
     clearTimeout(timeOut);
@@ -61,15 +60,14 @@ $(document).ready(function () {
     const loopThis = () => {
       nextSelect();
       timeOut = setTimeout(loopThis, interval);
-    }
+    };
     timeOut = setTimeout(loopThis, interval);
-  }
+  };
 
-  const stopAnimation = (result, onStop = () => { }) => {
+  const stopAnimation = (result, onStop = () => {}) => {
     clearTimeout(timeOut);
     const loopThis = () => {
-      if (interval <= maxInterval)
-        interval += 50;
+      if (interval <= maxInterval) interval += 50;
       if (interval < maxInterval || result !== i) {
         nextSelect();
         timeOut = setTimeout(loopThis, interval);
@@ -77,28 +75,59 @@ $(document).ready(function () {
         clearTimeout(timeOut);
         onStop();
       }
-    }
+    };
     timeOut = setTimeout(loopThis, interval);
   };
 
+  function sleep(time = 3000) {
+    return new Promise((r) => setTimeout(r, time));
+  }
 
+  function eachMember(action = () => {}) {
+    for (let i = 0; i < members.length; i++) {
+      action(members[i], i);
+    }
+  }
 
-  $('#submitBtn').click(function (e) {
+  async function playShakeAnimation(idolIndexes = [], onComplete = () => {}) {
+    for (const member of members) {
+      member.classList.add("shake");
+    }
+    eachMember((member) => {
+      member.classList.add("shake");
+    });
+    await sleep();
+    eachMember((member, index) => {
+      member.classList.remove("shake");
+      if (!idolIndexes.includes(index)) {
+        member.classList.add("fall");
+        setTimeout(() => {
+          member.style.display = "none";
+        }, 1000);
+      }
+    });
+    onComplete();
+  }
+
+  let header = document.getElementById("header");
+
+  $("#submitBtn").click(function (e) {
     e.preventDefault();
-    playAnimation();
     var url = "http://127.0.0.1:5000/";
-    $.post(url, { image_data: base64 },
-      function (data, status) {
-        console.log('## respone ', status, data)
-        var label = data.class;
-        var idol = data.idol;
-        stopAnimation(label, function () {
-          alert(`'The idol${data} in the picture is ${idol}'`)
-        });
-      })
+    $.post(url, { image_data: base64 }, function (data, status) {
+      const idolIndexes = data.map((idol) => idol.class);
+      playShakeAnimation(idolIndexes, () => {
+        if (idolIndexes.length < 1) {
+          header.innerHTML = "Found no Blackpink member in your picture.";
+        }
+        header.innerHTML = `Found ${data
+          .map((idol) => idol.label)
+          .join(" and ")}.`;
+      });
+    });
   });
 
-  $('#stopBtn').click(function (e) {
+  $("#stopBtn").click(function (e) {
     e.preventDefault();
     stopAnimation(2);
   });

@@ -34,6 +34,8 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
   });
 });
 
+let header = document.getElementById("header");
+
 /**
  * Updates the thumbnail on a drop zone element.
  *
@@ -41,6 +43,7 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
  * @param {File} file
  */
 function updateThumbnail(dropZoneElement, file) {
+  header.innerHTML = "Which BLACKPINK member is in the picture?";
   let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
 
   // First time - remove the prompt
