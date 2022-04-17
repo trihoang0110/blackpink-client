@@ -111,18 +111,30 @@ $(document).ready(function () {
 
   let header = document.getElementById("header");
 
+  const removeDup = (arr) => {
+    return arr.filter((v,i,a)=>a.findIndex(v2=>(v2.class===v.class))===i);
+  }
+
   $("#submitBtn").click(function (e) {
     e.preventDefault();
     var url = "http://127.0.0.1:5000/";
-    $.post(url, { image_data: base64 }, function (data, status) {
-      const idolIndexes = data.map((idol) => idol.class);
+    $.post(url, { image_data: base64 }, function (JSONData, status) {
+      const data = removeDup(JSON.parse(JSONData));
+      console.log(data)
+      const idolIndexes = data.map((item) => item.class);
       playShakeAnimation(idolIndexes, () => {
-        if (idolIndexes.length < 1) {
-          header.innerHTML = "Found no Blackpink member in your picture.";
+        switch (idolIndexes.length) {
+          case 4:
+                header.innerHTML = "Blackpink in your area!";
+            break;
+          case 0:
+          header.innerHTML = "Blackpink in another area...";
+            break;
+          default:
+          header.innerHTML = `Found ${data
+            .map((item) => item.idol)
+            .join(" and ")} in your area!`;
         }
-        header.innerHTML = `Found ${data
-          .map((idol) => idol.label)
-          .join(" and ")}.`;
       });
     });
   });

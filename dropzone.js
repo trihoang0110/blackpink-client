@@ -35,6 +35,15 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
 });
 
 let header = document.getElementById("header");
+const members = $("#members").children();
+
+const resetMember = () => {
+  header.innerHTML = "Which BLACKPINK member is in the picture?";
+  for (let i = 0; i < members.length; i++) {
+    members[i].classList.remove("fall");
+    members[i].style.display = "flex";
+  }
+}
 
 /**
  * Updates the thumbnail on a drop zone element.
@@ -43,7 +52,7 @@ let header = document.getElementById("header");
  * @param {File} file
  */
 function updateThumbnail(dropZoneElement, file) {
-  header.innerHTML = "Which BLACKPINK member is in the picture?";
+  resetMember();
   let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
 
   // First time - remove the prompt
